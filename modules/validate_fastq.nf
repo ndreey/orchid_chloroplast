@@ -3,7 +3,7 @@
 process VALIDATE_PE {
 
     label 'validate'
-    tag "validate-${read1}-${type}"
+    tag "validate-${read1}"
 
     conda params.mamba.STATS
 
