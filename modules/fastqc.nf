@@ -5,7 +5,7 @@ process FASTQC {
     label "qc"
     tag "${meta.sample}"
 
-    container params.images.QC
+    conda params.mamba.QC
 
     input:
     tuple val(meta), path(read)

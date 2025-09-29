@@ -8,7 +8,7 @@ process TRIM {
 
     publishDir params.res.trim, mode: 'symlink', pattern: "*.fastq.gz"
 
-    container params.images.QC
+    conda params.mamba.fastp
 
     input:
     tuple val(meta), path(read1), path(read2)
@@ -34,7 +34,9 @@ process TRIM {
         --html ${meta.sample}-fastp.html \\
         --json ${meta.sample}-fastp.json \\
         --thread ${task.cpus} \\
-        --average_qual ${params.trim.avg_qual} \\
+        --cut_right \\
+        --cut_right_window_size ${params.trim.cut_right_window} \\
+        --cut_right_mean_quality ${params.trim.cut_right_qual} \\
         --length_required ${params.trim.len_req} \\
         --trim_poly_x \\
         --detect_adapter_for_pe \\

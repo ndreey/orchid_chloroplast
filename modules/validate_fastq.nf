@@ -3,9 +3,9 @@
 process VALIDATE_PE {
 
     label 'validate'
-    tag "validate-${read1.getSimpleName()}-${type}"
+    tag "validate-${read1}-${type}"
 
-    container params.images.STATS
+    conda params.mamba.STATS
 
     input:
     tuple path(read1), path(read2), val(type)

@@ -5,7 +5,7 @@ process MULTIQC {
     label "qc"
     tag "multiqc"
 
-    container params.images.QC
+    conda params.mamba.QC
 
     input:
     file('reports/*')
