@@ -33,7 +33,11 @@ BUSCO:
 #  GTDBtk_mash: "/cfs/klemming/projects/supr/snic2020-6-222/Projects/Tconura/working/Andre/databases/GTDB-MASH"
 
 
-
+mamba:
+  fastp:  "fastp"
+  QC:     "fastqc multiqc"
+  STATS:  "biopet-validatefastq seqkit bbmap"
+    
 
 #########################################################################
 ########################## Singularity Images ###########################
@@ -72,9 +76,3 @@ images:
 #  GTDBTk: "oras://community.wave.seqera.io/library/gtdbtk:2.4.0--6a9187dd79fb4cf0"
 #  bakta: "oras://community.wave.seqera.io/library/bakta:1.11.3--73be9e79026f6814"
 #  checkm2: "oras://community.wave.seqera.io/library/checkm2:1.1.0--450784eb7a60b7bf"
-
-mamba:
-  fastp:  "fastp"
-  QC:     "fastqc multiqc"
-  STATS:  "biopet-validatefastq seqkit bbmap"
-    

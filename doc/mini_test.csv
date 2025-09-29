@@ -1,3 +1,10 @@
 sample,genus,taxon,group,country,r1,r2
 2769,Gymnadenia,frivaldii,frivaldii,GRE,../chloro/raw-data/Sample_2769/2769_S41_L007_R1_001.fastq.gz,../chloro/raw-data/Sample_2769/2769_S41_L007_R2_001.fastq.gz
 2759,Pseudorchis,tricuspis,Pseudorchis,SUI,../chloro/raw-data/Sample_2759/2759_S42_L007_R1_001.fastq.gz,../chloro/raw-data/Sample_2759/2759_S42_L007_R2_001.fastq.gz
+2774,Gymnadenia,frivaldii,frivaldii,GRE,../chloro/raw-data/Sample_2774/2774_S43_L007_R1_001.fastq.gz,../chloro/raw-data/Sample_2774/2774_S43_L007_R2_001.fastq.gz
+3312,Dactylorhiza,euxina,euxina,GEO,../chloro/raw-data/Sample_3312/3312_S44_L007_R1_001.fastq.gz,../chloro/raw-data/Sample_3312/3312_S44_L007_R2_001.fastq.gz
+671,Dactylorhiza,iberica,iberica,GRE,../chloro/raw-data/Sample_671/671_S45_L007_R1_001.fastq.gz,../chloro/raw-data/Sample_671/671_S45_L007_R2_001.fastq.gz
+544,Dactylorhiza,osmanica,incarnata_SE,TUR,../chloro/raw-data/Sample_544/544_S46_L007_R1_001.fastq.gz,../chloro/raw-data/Sample_544/544_S46_L007_R2_001.fastq.gz
+1658,Dactylorhiza,kolaensis,maculata,NOR,../chloro/raw-data/Sample_1658/1658_S47_L007_R1_001.fastq.gz,../chloro/raw-data/Sample_1658/1658_S47_L007_R2_001.fastq.gz
+561,Dactylorhiza,umbrosa,incarnata_SE,TUR,../chloro/raw-data/Sample_561/561_S48_L007_R1_001.fastq.gz,../chloro/raw-data/Sample_561/561_S48_L007_R2_001.fastq.gz
+12240,Dactylorhiza,foliosa,maculata,POR,../chloro/raw-data/Sample_12240/12240_S49_L007_R1_001.fastq.gz,../chloro/raw-data/Sample_12240/12240_S49_L007_R2_001.fastq.gz
