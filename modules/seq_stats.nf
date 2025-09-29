@@ -5,7 +5,7 @@ process FASTQ_STATS {
 
     publishDir 'results/stats', mode: 'copy'
 
-    container params.images.STATS
+    conda params.mamba.STATS
 
     input:
     tuple path(fastq_files), val(id)

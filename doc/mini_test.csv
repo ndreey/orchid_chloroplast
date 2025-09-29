@@ -1,0 +1,3 @@
+sample,genus,taxon,group,country,r1,r2
+2769,Gymnadenia,frivaldii,frivaldii,GRE,../chloro/raw-data/Sample_2769/2769_S41_L007_R1_001.fastq.gz,../chloro/raw-data/Sample_2769/2769_S41_L007_R2_001.fastq.gz
+2759,Pseudorchis,tricuspis,Pseudorchis,SUI,../chloro/raw-data/Sample_2759/2759_S42_L007_R1_001.fastq.gz,../chloro/raw-data/Sample_2759/2759_S42_L007_R2_001.fastq.gz

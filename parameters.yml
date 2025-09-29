@@ -13,13 +13,13 @@ res:
   decon: "results/02-decontamination"
 
 # Init params
-metadata:
-  sr: "doc/metadata.csv"
+metadata: "doc/mini_test.csv"
 
 # Trimming parameters
 trim:
-  avg_qual: 20
-  len_req: 36
+  cut_right_window: 10
+  cut_right_qual:   20
+  len_req:          36
 
 # BUSCO
 BUSCO:
@@ -65,10 +65,16 @@ BUSCO:
 images:
   QC: "oras://community.wave.seqera.io/library/bbmap_bwa_fastp_fastqc_pruned:676e8c82ba1c1ecb"
 #  ALIGN: "oras://community.wave.seqera.io/library/bedtools_bwa_minimap2_picard_pruned:7307bc2358e45de6"
-#  STATS: "oras://community.wave.seqera.io/library/bbmap_biopet-validatefastq_seqkit:a1c4fb2615ae72e6"
+  STATS: "oras://community.wave.seqera.io/library/bbmap_biopet-validatefastq_seqkit:a1c4fb2615ae72e6"
 #  ASSEMBLY: "oras://community.wave.seqera.io/library/megahit_metamdbg:6fcef2bb1a0bd3a9"
 #  metaWRAP: "./containers/metawrap_final.sif"
 #  BUSCO: "oras://community.wave.seqera.io/library/busco:6.0.0--7def4b2c35a1aed1"
 #  GTDBTk: "oras://community.wave.seqera.io/library/gtdbtk:2.4.0--6a9187dd79fb4cf0"
 #  bakta: "oras://community.wave.seqera.io/library/bakta:1.11.3--73be9e79026f6814"
 #  checkm2: "oras://community.wave.seqera.io/library/checkm2:1.1.0--450784eb7a60b7bf"
+
+mamba:
+  fastp:  "fastp"
+  QC:     "fastqc multiqc"
+  STATS:  "biopet-validatefastq seqkit bbmap"
+    
