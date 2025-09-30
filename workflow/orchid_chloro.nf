@@ -3,6 +3,7 @@
 include { TRIM_READS }                  from '../subworkflows/trim_reads.nf'
 include { FASTQ_VALIDATION_STATS }      from '../subworkflows/check_fastq.nf'
 include { QC_REPORTS }                  from '../subworkflows/qc_reports.nf'
+include { GET_ORGANELLE }               from '../subworkflows/get_organelle.nf'
 
 workflow ORCL_PIPELINE {
 
@@ -28,5 +29,13 @@ workflow ORCL_PIPELINE {
             short_reads,
             TRIM_READS.out.trimmed_reads,
             TRIM_READS.out.fastp_reports,
-        )       
+        )
+
+        ////////////////////////////////////////////////////////////////////////////
+        // 2. GetOrganelle - Organelle genome assembly
+        ////////////////////////////////////////////////////////////////////////////
+        GET_ORGANELLE(
+            TRIM_READS.out.trimmed_reads
+        )
+
 }
