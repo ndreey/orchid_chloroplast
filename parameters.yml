@@ -11,6 +11,12 @@ res:
   qc: "results/00-QC"
   trim: "results/01-trimmed"
   get_org: "results/03-get_organelle"
+  getorg_polish: "results/04-get_org_polish"
+  chloroplasts: "results/chloroplast_genomes
+
+# Statistics
+stats:
+  get_org: "results/stats/get_organelle_results.tsv"
 
 # Init params
 metadata: "doc/mini_test.csv"
