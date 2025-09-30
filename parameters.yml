@@ -23,8 +23,8 @@ trim:
 
 getorg:
   wordsize:         75
-  kmr_init:         21,33,55
-  kme_polish:       21,33,55,65,75
+  kmer_init:         21,33,55
+  kmer_polish:       21,33,55,65,75
 
 # BUSCO
 BUSCO:

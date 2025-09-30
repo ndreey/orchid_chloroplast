@@ -6,10 +6,10 @@ process GETORGANELLE_SETUP {
     
     tag "getorganelle-setup"
 
-    conda params.mamba.GETORGANELLE
+    conda params.mamba.GetOrganelle
 
     output:
-    path "database_status.txt", emit: getorg_flag
+    path "getOrganelle_status.txt", emit: getorg_flag
 
     script:
     """
@@ -17,7 +17,7 @@ process GETORGANELLE_SETUP {
     echo "Setting up GetOrganelle databases..."
     
     # Download the databases (embryophyte plastid, Embryophyte mitcochondrion)
-    get_organelle_config.py --add embplant_pt,embplant_mt
+    get_organelle_config.py --add embplant_pt
     
     # Verify setup completed successfully
     if get_organelle_config.py --list | grep -q "embplant"; then
@@ -42,15 +42,15 @@ process GETORGANELLE_RUN {
 
     publishDir "${params.res.get_org}/${meta.sample}", mode: 'symlink'
 
-    conda params.mamba.GETORGANELLE
+    conda params.mamba.GetOrganelle
 
     input:
     tuple val(meta), path(read1), path(read2)
     path database_flag
 
     output:
-    tuple val(meta), path("${meta.sample}_organelle_results/"), emit: results
-    tuple val(meta), path("${meta.sample}_organelle_results/*.fasta"), emit: assemblies, optional: true
+    tuple val(meta), path("${meta.sample}_results/"), emit: results
+    tuple val(meta), path("${meta.sample}_results/*.fasta"), emit: assemblies, optional: true
 
     script:
     """
