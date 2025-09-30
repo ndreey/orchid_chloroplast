@@ -10,7 +10,7 @@ slurm:
 res:
   qc: "results/00-QC"
   trim: "results/01-trimmed"
-  decon: "results/02-decontamination"
+  get_org: "results/03-get_organelle"
 
 # Init params
 metadata: "doc/mini_test.csv"
@@ -20,6 +20,11 @@ trim:
   cut_right_window: 10
   cut_right_qual:   20
   len_req:          36
+
+getorg:
+  wordsize:         75
+  kmr_init:         21,33,55
+  kme_polish:       21,33,55,65,75
 
 # BUSCO
 BUSCO:
@@ -34,9 +39,10 @@ BUSCO:
 
 
 mamba:
-  fastp:  "fastp"
-  QC:     "fastqc multiqc"
-  STATS:  "biopet-validatefastq seqkit bbmap"
+  fastp:          "fastp"
+  QC:             "fastqc multiqc"
+  STATS:          "biopet-validatefastq seqkit bbmap"
+  GetOrganelle:   "getorganelle"
     
 
 #########################################################################
