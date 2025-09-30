@@ -53,10 +53,7 @@ process GETORGANELLE_RUN {
     tuple val(meta), path("${meta.sample}_results/*.fasta"), emit: assemblies, optional: true
 
     script:
-    """
-    # Create output directory
-    mkdir -p ${meta.sample}_organelle_results
-    
+    """    
     echo "\$(date) [INFO]   GetOrganelle run for sample: ${meta.sample}"
     
     # Run GetOrganelle

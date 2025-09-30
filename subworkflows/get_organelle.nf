@@ -21,7 +21,7 @@ workflow GET_ORGANELLE {
     // Run GetOrganelle on each sample (waits for setup to complete)
     GETORGANELLE_RUN(
         reads_ch,
-        GETORGANELLE_SETUP.out.database_flag
+        GETORGANELLE_SETUP.out.getorg_flag
     )
     
     emit:
