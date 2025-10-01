@@ -38,7 +38,9 @@ process GETORGANELLE_RUN {
     label "get_org"
     tag "${meta.sample}"
 
-    publishDir "${params.res.get_org}", mode: 'symlink'
+    publishDir "${params.res.get_org}",        mode: 'symlink', pattern: "${meta.sample}_results"
+    publishDir "${params.res.getorg_polish}",  mode: 'symlink', pattern: "${meta.sample}_polish"
+
 
     conda params.mamba.GetOrganelle
 
@@ -47,10 +49,11 @@ process GETORGANELLE_RUN {
     path database_flag
 
     output:
-    tuple val(meta), path("${meta.sample}_results/"), emit: results
-    tuple val(meta), path("${meta.sample}_results/*graph1.1.path_sequence.fasta"), emit: assembly
-    tuple val(meta), path("${meta.sample}_results/.status.txt"), emit: status     // PASS or FAIL
-    tuple val(meta), path("${meta.sample}_results/.class.txt"),  emit: class      // complete / nearly-complete / scaffolds
+    path("${meta.sample}_results/"), emit: results
+    path("${meta.sample}_polish/"), optional: true, emit: polish
+    tuple val(meta), path("${meta.sample}*1.1.path_sequence.fasta"), emit: assembly
+    path("status.txt"), emit: status_file
+    path("type.txt"), emit: type_file
 
     script:
     """
@@ -58,11 +61,11 @@ process GETORGANELLE_RUN {
 
     echo "\$(date) [INFO]   GetOrganelle run for sample: ${meta.sample}"
 
-    COMP="${params.res.chloroplasts}/complete"
-    NC="${params.res.chloroplasts}/nearly-complete"
-    SCAFF="${params.res.chloroplasts}/scaffolds"
+    # Create directories
+    COMP="../../../${params.res.chloroplasts}/complete"
+    NC="../../../${params.res.chloroplasts}/nearly-complete"
+    SCAFF="../../../${params.res.chloroplasts}/scaffolds"
     mkdir -p "\$COMP" "\$NC" "\$SCAFF"
-    mkdir -p "${meta.sample}_results"
 
     # ---------- First pass ----------
     get_organelle_from_reads.py \\
@@ -77,26 +80,34 @@ process GETORGANELLE_RUN {
 
     echo "\$(date) [INFO]   First pass complete"
 
-    # Find first-pass assembly (take the first match if multiple)
-    GENOME=\$(ls -1 ${meta.sample}_results/*graph1.1.path_sequence.fasta 2>/dev/null | head -n1 || true)
-
-    # Parse type from filename.
+    # Find first-pass assembly 
+    GENOME=\$(ls ${meta.sample}_results/*1.1.path_sequence.fasta | head -n1)
     RESULT_TYPE=\$(echo "\$GENOME" | grep -Eo 'complete|nearly-complete|scaffolds' | head -n1)
+
+    # Initialize variables for output
+    STATUS="FAIL"
+    RESULT_TYPE_FINAL="\$RESULT_TYPE"
+    BEST_ASSEMBLY="\$GENOME"
 
     if [ "\$RESULT_TYPE" = "complete" ]; then
         # Complete on first pass -> PASS, keep results as-is
         STATUS="PASS"
+        RESULT_TYPE_FINAL="complete"
         cp "\$GENOME" "\$COMP/"
-
-        echo "\$STATUS" > "${meta.sample}_results/.status.txt"
-        echo "\$RESULT_TYPE" > "${meta.sample}_results/.class.txt"
-        echo -e "${meta.sample}\\t\$RESULT_TYPE\\tNA" >> "${params.stats.get_org}"
-
+        echo -e "${meta.sample}\\t\$RESULT_TYPE\\tNA" >> "../../../${params.stats.get_org}"
         echo "\$(date) [INFO]   Classified COMPLETE (PASS) on first pass"
+        
+        # Copy best assembly to working directory for output
+        cp "\$GENOME" ./
+        
+        # Write output files for Nextflow
+        echo "\$STATUS" > status.txt
+        echo "\$RESULT_TYPE_FINAL" > type.txt
+        
         exit 0
     fi
 
-    echo "\$(date) [INFO]   Starting polish pass"
+    echo "\$(date) [INFO]   Starting polish as first pass resulted with: \$RESULT_TYPE"
 
     # ---------- Polish pass ----------
     get_organelle_from_reads.py \\
@@ -110,7 +121,7 @@ process GETORGANELLE_RUN {
         --prefix "${meta.sample}_" \\
         --overwrite
 
-    POLISH=\$(ls -1 ${meta.sample}_polish/*graph1.1.path_sequence.fasta 2>/dev/null | head -n1 || true)
+    POLISH=\$(ls ${meta.sample}_polish/*1.1.path_sequence.fasta | head -n1)
 
     if [ -z "\$POLISH" ]; then
         # No polish output — keep first-pass result
@@ -122,55 +133,80 @@ process GETORGANELLE_RUN {
             STATUS="FAIL"
             cp "\$GENOME" "\$SCAFF/"
         fi
-
-        echo "\$STATUS" > "${meta.sample}_results/.status.txt"
-        echo "\$RESULT_TYPE" > "${meta.sample}_results/.class.txt"
-        echo -e "${meta.sample}\\t\$RESULT_TYPE\\tNA" >> "${params.stats.get_org}"
-
+        RESULT_TYPE_FINAL="\$RESULT_TYPE"
+        BEST_ASSEMBLY="\$GENOME"
+        echo -e "${meta.sample}\\t\$RESULT_TYPE\\tFAIL" >> "../../../${params.stats.get_org}"
         echo "\$(date) [INFO]   No polish assembly; keeping first-pass (\$RESULT_TYPE -> \$STATUS)"
-        exit 0
+    else
+        # Polish succeeded, compare results
+        RESULT_TYPE2=\$(echo "\$POLISH" | grep -Eo 'complete|nearly-complete|scaffolds' | head -n1)
+        
+        # Determine which result to use based on your logic
+        USE_POLISH=false
+        
+        # If first pass scaffolds -> polish anything better, use polish
+        if [ "\$RESULT_TYPE" = "scaffolds" ] && [ "\$RESULT_TYPE2" != "scaffolds" ]; then
+            USE_POLISH=true
+        fi
+        
+        # If first pass nearly-complete -> polish complete, use polish
+        if [ "\$RESULT_TYPE" = "nearly-complete" ] && [ "\$RESULT_TYPE2" = "complete" ]; then
+            USE_POLISH=true
+        fi
+        
+        # If first pass nearly-complete -> polish scaffolds, use first pass
+        if [ "\$RESULT_TYPE" = "nearly-complete" ] && [ "\$RESULT_TYPE2" = "scaffolds" ]; then
+            USE_POLISH=false
+        fi
+        
+        if [ "\$USE_POLISH" = "true" ]; then
+            # Use polish results
+            RESULT_TYPE_FINAL="\$RESULT_TYPE2"
+            BEST_ASSEMBLY="\$POLISH"
+            if [ "\$RESULT_TYPE2" = "complete" ]; then
+                STATUS="PASS"
+                cp "\$POLISH" "\$COMP/"
+            elif [ "\$RESULT_TYPE2" = "nearly-complete" ]; then
+                STATUS="PASS"
+                cp "\$POLISH" "\$NC/"
+            else
+                STATUS="FAIL"
+                cp "\$POLISH" "\$SCAFF/"
+            fi
+        else
+            # Use first pass results
+            RESULT_TYPE_FINAL="\$RESULT_TYPE"
+            BEST_ASSEMBLY="\$GENOME"
+            if [ "\$RESULT_TYPE" = "nearly-complete" ]; then
+                STATUS="PASS"
+                cp "\$GENOME" "\$NC/"
+            else
+                STATUS="FAIL"
+                cp "\$GENOME" "\$SCAFF/"
+            fi
+        fi
+        
+        echo -e "${meta.sample}\\t\$RESULT_TYPE\\t\$RESULT_TYPE2" >> "../../../${params.stats.get_org}"
     fi
 
-    POLISH_BASENAME=\$(basename "\$POLISH")
-    RESULT_TYPE2=\$(echo "\$POLISH" | grep -Eo 'complete|nearly-complete|scaffolds' | head -n1)
-
-    # ---------- Promotion / cleanup logic (your original intent) ----------
-    # If nearly-complete -> scaffolds, discard polish
-    if [ "\$RESULT_TYPE" = "nearly-complete" ] && [ "\$RESULT_TYPE2" = "scaffolds" ]; then
-        rm -rf "${meta.sample}_polish"
-        cp \$GENOME \$NC
-    fi
-
-    # If nearly-complete -> complete, promote polish to results
-    if [ "\$RESULT_TYPE" = "nearly-complete" ] && [ "\$RESULT_TYPE2" = "complete" ]; then
-        cp \$POLISH \$COMP
-        rm -rf "${meta.sample}_results"
-        mv "${meta.sample}_polish" "${meta.sample}_results"
-    fi
-
-    # If scaffolds -> not scaffolds, promote polish to results
-    if [ "\$RESULT_TYPE" = "scaffolds" ] && [ "\$RESULT_TYPE2" != "scaffolds" ]; then
-        cp \$POLISH ${params.res.chloroplasts}/\$RESULT_TYPE2
-        rm -rf "${meta.sample}_results"
-        mv "${meta.sample}_polish" "${meta.sample}_results"
-    fi
-
-    # Write small status/class files for the outputs you want to emit
-    echo "\$STATUS" > "${meta.sample}_results/.status.txt"
-    echo "\$RESULT_TYPE_FINAL" > "${meta.sample}_results/.class.txt"
-
-    # Append run summary to your stats tsv
-    echo -e "${meta.sample}\\t\$RESULT_TYPE\\t\$RESULT_TYPE2" >> "${params.stats.get_org}" 2>/dev/null || \\
-    echo -e "${meta.sample}\\t\$RESULT_TYPE\\tNA" >> "${params.stats.get_org}"
-
+    # Copy the best assembly to working directory for output
+    cp "\$BEST_ASSEMBLY" ./
+    
+    # Write final output files for Nextflow
+    echo "\$STATUS" > status.txt
+    echo "\$RESULT_TYPE_FINAL" > type.txt
+    
     echo "\$(date) [INFO]   Final: type=\$RESULT_TYPE_FINAL, status=\$STATUS"
     """
+
+    stub:
+    """
+    mkdir -p ${meta.sample}_results
+    mkdir -p ${meta.sample}_polish
+    touch ${meta.sample}_results/dummy.txt
+    touch ${meta.sample}_polish/dummy.txt
+    touch ${meta.sample}_complete.graph1.1.path_sequence.fasta
+    echo "PASS" > status.txt
+    echo "complete" > type.txt
+    """
 }
-
-
-########## TO DO ##########
-1. Check the logic in the end. Maybe we do not have to remove the _polish and it can be submitted to its own publishDir.
-2. Check the PASS/FAIL logic and how its emitted.
-3. Check the type logic and how its emitted.
-4. Update the workflow and subworkflow.
-5.

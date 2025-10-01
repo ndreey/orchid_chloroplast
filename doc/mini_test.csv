@@ -8,3 +8,6 @@ sample,genus,taxon,group,country,r1,r2
 1658,Dactylorhiza,kolaensis,maculata,NOR,../chloro/raw-data/Sample_1658/1658_S47_L007_R1_001.fastq.gz,../chloro/raw-data/Sample_1658/1658_S47_L007_R2_001.fastq.gz
 561,Dactylorhiza,umbrosa,incarnata_SE,TUR,../chloro/raw-data/Sample_561/561_S48_L007_R1_001.fastq.gz,../chloro/raw-data/Sample_561/561_S48_L007_R2_001.fastq.gz
 12240,Dactylorhiza,foliosa,maculata,POR,../chloro/raw-data/Sample_12240/12240_S49_L007_R1_001.fastq.gz,../chloro/raw-data/Sample_12240/12240_S49_L007_R2_001.fastq.gz
+4204,Dactylorhiza,russowii,majalis,EST,../chloro/raw-data/Sample_4204/4204_S72_L007_R1_001.fastq.gz,../chloro/raw-data/Sample_4204/4204_S72_L007_R2_001.fastq.gz
+3173,Platanthera,bifolia,Platanthera,SWE,../chloro/raw-data/Sample_3173/3173_S83_L007_R1_001.fastq.gz,../chloro/raw-data/Sample_3173/3173_S83_L007_R2_001.fastq.gz
+3174,Platanthera,chlorantha,Platanthera,SWE,../chloro/raw-data/Sample_3174/3174_S84_L007_R1_001.fastq.gz,../chloro/raw-data/Sample_3174/3174_S84_L007_R2_001.fastq.gz

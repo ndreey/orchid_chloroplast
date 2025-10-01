@@ -24,7 +24,17 @@ workflow GET_ORGANELLE {
         GETORGANELLE_SETUP.out.getorg_flag
     )
     
+    // Convert status and type files to string values
+    status_ch = GETORGANELLE_RUN.out.status_file
+        .map { file -> file.text.trim() }
+    
+    type_ch = GETORGANELLE_RUN.out.type_file
+        .map { file -> file.text.trim() }
+    
     emit:
-    results    = GETORGANELLE_RUN.out.results     // tuple val(meta), path(results_dir)
-    assemblies = GETORGANELLE_RUN.out.assemblies  // tuple val(meta), path(*.fasta)
+    results    = GETORGANELLE_RUN.out.results      // path(sample_results/)
+    polish     = GETORGANELLE_RUN.out.polish       // path(sample_polish/) - optional
+    assemblies = GETORGANELLE_RUN.out.assembly     // tuple val(meta), path(*.best.fasta)
+    status     = status_ch                         // string values: PASS/FAIL
+    type       = type_ch                           // string values: complete/nearly-complete/scaffolds
 }
