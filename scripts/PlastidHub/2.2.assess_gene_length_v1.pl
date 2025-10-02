@@ -454,7 +454,7 @@ while (@filenames1) {
 
 
 	#output_bed_file
-	open (my $out_bed,">","$target_path\\$filename.bed");
+	open (my $out_bed,">","$target_path/$filename.bed");
 	foreach (@output3){
 		my @row=split /\t/,$_;
 		my $abs=abs($row[3]-$row[4]);
@@ -480,7 +480,7 @@ while (@filenames1) {
 		}
 	}
 	close $out_bed;
-	unlink("$target_path\\$filename.bed");
+	unlink("$target_path/$filename.bed");
 
 
 	####for rps12 in @output1 to @output2
@@ -547,7 +547,7 @@ while (@filenames1) {
 	#extract_gene
 	my (%SP2,%GENE2,%STRAND4,%START4,%END4,%TYPE4,%STRAND5,%START5,%END5,%TYPE5,%STRAND6,%START6,%END6,%TYPE6,$seq1);
 	my $cnt2=0;
-	open(my $out_coding,">","$target_path\\$filename.fasta");
+	open(my $out_coding,">","$target_path/$filename.fasta");
 	while (@fasta1){
 		my $header=shift @fasta1;
 		$seq1=shift @fasta1;
@@ -1380,7 +1380,7 @@ while (@filenames3) {
 
 
 	#output_bed_file
-	open (my $out_bed,">","$target_path\\$filename.bed");
+	open (my $out_bed,">","$target_path/$filename.bed");
 	foreach (@output3){
 		my @row=split /\t/,$_;
 		my $abs=abs($row[3]-$row[4]);
@@ -1406,7 +1406,7 @@ while (@filenames3) {
 		}
 	}
 	close $out_bed;
-	unlink("$target_path\\$filename.bed");
+	unlink("$target_path/$filename.bed");
 
 
 	####for rps12 in @output1 to @output2
@@ -1473,7 +1473,7 @@ while (@filenames3) {
 	#extract_gene
 	my (%SP2,%GENE2,%STRAND4,%START4,%END4,%TYPE4,%STRAND5,%START5,%END5,%TYPE5,%STRAND6,%START6,%END6,%TYPE6,$seq1);
 	my $cnt2=0;
-	open(my $out_coding,">","$target_path\\$filename.fasta");
+	open(my $out_coding,">","$target_path/$filename.fasta");
 	while (@fasta1){
 		my $header=shift @fasta1;
 		$seq1=shift @fasta1;

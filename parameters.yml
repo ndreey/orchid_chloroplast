@@ -49,6 +49,7 @@ mamba:
   QC:             "fastqc multiqc"
   STATS:          "biopet-validatefastq seqkit bbmap"
   GetOrganelle:   "getorganelle"
+  PlastidHub:     "perl blast circos mafft raxml"
     
 
 #########################################################################

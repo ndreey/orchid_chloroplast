@@ -94,7 +94,7 @@ while (@filenames) {
 	my $species=@species;
 	if (($species <= 50) and ($length <= 10000)) {
 		if (($runs == 100) or ($runs == 200) or ($runs == 500) or ($runs == 1000)) {
-			system("$Bin/scripts/raxmlHPC.exe -f a -x 12345 -p 12345 -k -N $runs -m $model -s $Bin/$filename_fasta -n $filename.result -w $Bin/$output_directory");
+			system("raxmlHPC -f a -x 12345 -p 12345 -k -N $runs -m $model -s $Bin/$filename_fasta -n $filename.result");
 			#$Bin/scripts/raxmlHPC-PTHREADS-AVX.exe -f a -x 12345 -p 12345 -k -T 10 -# 100 -m GTRGAMMA -s input/atpA.fasta -n atpA.result -w output
 		}
 		#if ("$filename_fasta.reduced") {

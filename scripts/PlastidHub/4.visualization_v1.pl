@@ -1188,7 +1188,7 @@ while (@filenames) {
 	$target_name=~ s/\s/_/g;
 	my $filename=substr($target_name,rindex($target_name,"\/")+1);
 
-	my $cmd1="perl bin\\circos -conf $output_directory\\$filename\_visualization.conf -outputdir $output_directory -outputfile $filename\_visualization -svg -png";
+	my $cmd1="circos -conf $output_directory/$filename\_visualization.conf -outputdir $output_directory -outputfile $filename\_visualization -svg -png";
 	#my $cmd2="perl bin\\circos -conf $output_directory\\$filename\_visualization.conf -outputdir $output_directory -outputfile $filename\_visualization -debug_group textplace";
 	system("$cmd1");
 	#system("$cmd2");

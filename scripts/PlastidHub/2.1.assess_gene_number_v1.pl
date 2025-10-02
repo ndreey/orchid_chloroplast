@@ -337,7 +337,7 @@ while (@filenames1) {
 	#close $out_bed;
 
 	#output_bed_file
-	open (my $out_bed,">","$target_path\\$filename\.bed");
+	open (my $out_bed,">","$target_path/$filename\.bed");
 	foreach (@output3){
 		my @row=split /\t/,$_;
 		my $abs=abs($row[3]-$row[4]);
@@ -831,7 +831,7 @@ while (@filenames3) {
 	#close $out_bed;
 
 	#output_bed_file
-	open (my $out_bed,">","$target_path\\$filename\.bed");
+	open (my $out_bed,">","$target_path/$filename\.bed");
 
 	foreach (@output3){
 		my @row=split /\t/,$_;

@@ -71,9 +71,9 @@ while (@filenames) {
 		#system ("mafft.bat --auto --inputorder $input > $output");
 		#system ("mafft.bat --localpair --maxiterate 16 --inputorder $input > $output");
 		if ($input=~ /\s/) {
-			system ("mafft.bat --localpair --maxiterate 16 --inputorder '$input' > $output");
+			system ("mafft --localpair --maxiterate 16 --inputorder '$input' > $output");
 		}else{
-			system ("mafft.bat --localpair --maxiterate 16 --inputorder $input > $output");
+			system ("mafft --localpair --maxiterate 16 --inputorder $input > $output");
 		}
 	}elsif ($species > 50) {
 		open(my $output_warning,">>",$warning);
