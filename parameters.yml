@@ -10,8 +10,8 @@ slurm:
 res:
   qc: "results/00-QC"
   trim: "results/01-trimmed"
-  get_org: "results/03-get_organelle"
-  getorg_polish: "results/04-get_org_polish"
+  get_org: "results/02-get_organelle"
+  getorg_polish: "results/03-get_org_polish"
   chloroplasts: "results/chloroplast_genomes"
 
 # Statistics
@@ -43,13 +43,13 @@ BUSCO:
 #  GTDBtk: "/sw/data/GTDB/R220/rackham/release220"
 #  GTDBtk_mash: "/cfs/klemming/projects/supr/snic2020-6-222/Projects/Tconura/working/Andre/databases/GTDB-MASH"
 
-
+# Mamba environments
 mamba:
   fastp:          "fastp"
   QC:             "fastqc multiqc"
   STATS:          "biopet-validatefastq seqkit bbmap"
   GetOrganelle:   "getorganelle"
-  PlastidHub:     "perl blast circos mafft raxml"
+  PlastidHub:     "perl blast mafft"
     
 
 #########################################################################

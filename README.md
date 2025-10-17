@@ -48,7 +48,7 @@ cd orchid_chloroplast
 nextflow run main.nf -profile local -params-file parameters.yml
 
 # With custom parameters
-nextflow run main.nf -profile local -params-file parameters.yml --trim_quality 25
+nextflow run main.nf -profile local -params-file parameters.yml --trim.cut_right_qual 25
 
 ```
 
