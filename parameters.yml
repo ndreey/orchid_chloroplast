@@ -13,6 +13,7 @@ res:
   get_org: "results/02-get_organelle"
   getorg_polish: "results/03-get_org_polish"
   chloroplasts: "results/chloroplast_genomes"
+  plastome_structure: "results/04-plastome-structure"
 
 # Statistics
 stats:

@@ -51,9 +51,9 @@ process GETORGANELLE_RUN {
     output:
     path("${meta.sample}_results/"), emit: results
     path("${meta.sample}_polish/"), optional: true, emit: polish
-    tuple val(meta), path("${meta.sample}*1.1.path_sequence.fasta"), emit: assembly
-    path("status.txt"), emit: status_file
-    path("type.txt"), emit: type_file
+    // Emit a single tuple that bundles meta, assembly fasta, status and type files
+    // downstream consumers can read status/type from the files or map them into strings
+    tuple val(meta), path("${meta.sample}*1.1.path_sequence.fasta"), path("status.txt"), path("type.txt"), emit: assembly
 
     script:
     """

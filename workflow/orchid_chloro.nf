@@ -4,6 +4,7 @@ include { TRIM_READS }                  from '../subworkflows/trim_reads.nf'
 include { FASTQ_VALIDATION_STATS }      from '../subworkflows/check_fastq.nf'
 include { QC_REPORTS }                  from '../subworkflows/qc_reports.nf'
 include { GET_ORGANELLE }               from '../subworkflows/get_organelle.nf'
+include { PLASTOME_ANNOTATION }         from '../subworkflows/plastome_annotation.nf'
 
 workflow ORCL_PIPELINE {
 
@@ -37,5 +38,11 @@ workflow ORCL_PIPELINE {
         GET_ORGANELLE(
             TRIM_READS.out.trimmed_reads
         )
+
+        ////////////////////////////////////////////////////////////////////////////
+        // 3. PlastidHub - Plastid genome annotation
+        ////////////////////////////////////////////////////////////////////////////
+        PLASTOME_ANNOTATION(
+            GET_ORGANELLE.out.plastome)
 
 }
