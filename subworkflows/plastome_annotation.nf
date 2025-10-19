@@ -10,8 +10,9 @@
  *  - Collect all passed FASTAs into a single list and pass that to PLASTOME_STRUCTURE
  */
 
-include { RENAME_PLASTOME }    from '../modules/rename_plastome.nf'
-include { PLASTOME_STRUCTURE } from '../modules/plastome_structure.nf'
+include { RENAME_PLASTOME }             from '../modules/rename_plastome.nf'
+include { PLASTOME_STRUCTURE }          from '../modules/plastome_structure.nf'
+include { PGA_V2 }                      from '../modules/PGA_v2.nf'
 
 workflow PLASTOME_ANNOTATION {
     take:
@@ -36,8 +37,20 @@ workflow PLASTOME_ANNOTATION {
         // Run the structure module once on the collected PASS FASTAs
         PLASTOME_STRUCTURE(pass_fastas)
 
+        // Collect all .gb files under the configured directory into a single emission.
+        ref_plastomes = Channel
+            .fromPath("${params.references.plastome_genbank}/*.gb", checkIfExists: true)
+            .collect()
+
+        // Annotate the plastomes on the collected PASS FASTAs using reference plastomes
+        PGA_V2(pass_fastas, ref_plastomes)
+
+    
     emit:
-        plastome_structure_results = PLASTOME_STRUCTURE.out.results
+        plastome_structure_results = PLASTOME_STRUCTURE.out.structured_fastas
         plastome_structure_summary = PLASTOME_STRUCTURE.out.structure_summary
+        plastome_structure_coords = PLASTOME_STRUCTURE.out.structure_coord
+        plastome_annotations = PGA_V2.out.annotations
+        plastome_annotation_log = PGA_V2.out.annotation_log
 
 }

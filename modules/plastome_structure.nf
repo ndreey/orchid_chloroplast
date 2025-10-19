@@ -4,10 +4,11 @@ process PLASTOME_STRUCTURE {
     label 'plastome_structure'
     tag 'plastome_structure'
 
-    // Publish final results to the requested location
-    publishDir params.res.plastome_structure, mode: 'copy'
-    // Ensure the summary TSV is published to the workspace stats folder
+    // publish only FASTA files from the plastome_structure/ folder
+    publishDir params.res.plastome_structure, mode: 'symlink', pattern: '*.plastome_LSC_IRb_SSC_IRa.fasta'
+    // publish the summary TSV to the stats folder
     publishDir 'results/stats', mode: 'copy', pattern: 'plastome-structure_summary.tsv'
+    publishDir 'results/stats', mode: 'copy', pattern: 'quadripartite_structure_coordinate.txt'
 
     conda params.mamba.PlastidHub
 
@@ -15,10 +16,12 @@ process PLASTOME_STRUCTURE {
         file fastas
 
     output:
-        // Expect the Perl script to write out a folder named "plastome_structure"
-        path 'plastome_structure/', emit: results
-        // Explicitly declare the TSV summary as a process output so Nextflow tracks & publishes it
+        // publish individual FASTA files (NOT the whole folder)
+        path '*.plastome_LSC_IRb_SSC_IRa.fasta', emit: structured_fastas
+        // publish the TSV summary to stats
         path 'plastome-structure_summary.tsv', emit: structure_summary
+        path 'quadripartite_structure_coordinate.txt', emit: structure_coord
+
 
     script:
     """
@@ -30,22 +33,22 @@ process PLASTOME_STRUCTURE {
     # stage input FASTAs
     for f in ${fastas}
     do
-        cp "\$f" passed_plastomes/
+        mv "\$f" passed_plastomes/
     done
 
     # Absolute path to the PlastidHub script
     PLASTIDHUB_PATH="/home/andbou/orchid_chloroplast/scripts/PlastidHub"
 
     # Run the PlastidHub script on staged FASTAs
-    perl "\${PLASTIDHUB_PATH}/1.1.quadripartite_standardization_v1.pl" \\
+    perl \${PLASTIDHUB_PATH}/1.1.quadripartite_standardization_v1.pl \\
         -i passed_plastomes \\
-        -length 500 \\              # minimum length to consider a region
-        -rc N \\                    # do not need reverse-complement sequences                               
-        -same N \\                  # IRa and IRb can differ        
+        -r N \\
+        -s N \\
+        -l 500 \\
         -o plastome_structure
 
     # Remove unstructured path_sequence FASTAs, keep the LSC_IRb_SSC_IRa structured FASTAs
-    rm -f plastome_structure/*path_sequence.fasta || true
+    rm -f plastome_structure/*plastome.fasta || true
 
     # Build a TSV summary of region lengths per fasta using the coordinate file
     # Keep only the Post-adjustment lines and compute lengths from ranges like 1-83153
@@ -72,7 +75,11 @@ process PLASTOME_STRUCTURE {
         echo -e "FastaFileNames\\ttotal\\tLSC\\tIRb\\tSSC\\tIRa" > plastome-structure_summary.tsv
     fi
 
-    rm -r passed_plastomes
+    # Move contents into working directory.
+    cp plastome_structure/* . || true
+
+    rm -r passed_plastomes plastome_structure
+    
     echo "Plastome structure analysis and summary completed."
     """
 }

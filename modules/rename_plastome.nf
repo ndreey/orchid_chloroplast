@@ -1,7 +1,8 @@
 #!/usr/bin/env nextflow
 
 process RENAME_PLASTOME {
-    tag { meta.sample ?: 'unknown' }
+    
+    tag "${meta.sample}-rename"
 
     input:
         tuple val(meta), file(fasta), val(status), val(type)
@@ -16,9 +17,14 @@ process RENAME_PLASTOME {
     taxon='${meta.taxon ?: 'unknown'}'
     type_tag='${type ?: 'unknown'}'
 
-    # Build filename as: sample-genus.taxon-<type>.plastome.fasta
-    new_name="\${sample}-\${genus}_\${taxon}-\${type_tag}.plastome.fasta"
+    # Construct base name (no extra sanitization per your note)
+    base="\${sample}-\${genus}_\${taxon}-\${type_tag}-plastome"
+    new_name="\${base}.plastome.fasta"
 
-    mv "${fasta}" "\$new_name"
+    # Replace headers in the FASTA file
+    awk -v name="\${base}" 'BEGIN{n=0} /^>/ { if(n==0) {print ">"name} else {print ">"name"_"n} n++; next } {print}' "${fasta}" > "\${new_name}"
+
+    # remove the original file so only the renamed FASTA remains
+    rm -f "${fasta}"
     """
 }
