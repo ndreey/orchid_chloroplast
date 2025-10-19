@@ -13,6 +13,9 @@ res:
   get_org: "results/02-get_organelle"
   getorg_polish: "results/03-get_org_polish"
   chloroplasts: "results/chloroplast_genomes"
+  plastome_structure: "results/04-plastome-structure"
+  plastome_annotation: "results/05-plastome-annotation"
+
 
 # Statistics
 stats:
@@ -20,6 +23,10 @@ stats:
 
 # Init params
 metadata: "doc/mini_test.csv"
+
+# Reference genomes
+references:
+  plastome_genbank: "plastomes_data/genbank"
 
 # Trimming parameters
 trim:
