@@ -5,7 +5,7 @@ process PLASTOME_STRUCTURE {
     tag 'plastome_structure'
 
     // publish only FASTA files from the plastome_structure/ folder
-    publishDir params.res.plastome_structure, mode: 'symlink', pattern: '*.plastome_LSC_IRb_SSC_IRa.fasta'
+    publishDir params.res.plastome_structure, mode: 'symlink', pattern: '*plastome_LSC_IRb_SSC_IRa.fasta'
     // publish the summary TSV to the stats folder
     publishDir 'results/stats', mode: 'copy', pattern: 'plastome-structure_summary.tsv'
     publishDir 'results/stats', mode: 'copy', pattern: 'quadripartite_structure_coordinate.txt'
@@ -17,7 +17,7 @@ process PLASTOME_STRUCTURE {
 
     output:
         // publish individual FASTA files (NOT the whole folder)
-        path '*.plastome_LSC_IRb_SSC_IRa.fasta', emit: structured_fastas
+        path '*plastome_LSC_IRb_SSC_IRa.fasta', emit: structured_fastas
         // publish the TSV summary to stats
         path 'plastome-structure_summary.tsv', emit: structure_summary
         path 'quadripartite_structure_coordinate.txt', emit: structure_coord
