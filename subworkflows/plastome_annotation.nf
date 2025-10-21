@@ -13,6 +13,8 @@
 include { RENAME_PLASTOME }             from '../modules/rename_plastome.nf'
 include { PLASTOME_STRUCTURE }          from '../modules/plastome_structure.nf'
 include { PGA_V2 }                      from '../modules/PGA_v2.nf'
+include { PLASTOME_ASSESSMENT }         from '../modules/plastome_assessment.nf'
+include { PLASTOME_EXTRACTION }         from '../modules/plastome_extraction.nf'
 
 workflow PLASTOME_ANNOTATION {
     take:
@@ -45,12 +47,19 @@ workflow PLASTOME_ANNOTATION {
         // Annotate the plastomes on the collected PASS FASTAs using reference plastomes
         PGA_V2(pass_fastas, ref_plastomes)
 
-    
+        // Assessment of the plastome annotations
+        PLASTOME_ASSESSMENT(ref_plastomes, PGA_V2.out.annotations)
+
+        // Extract cds and intergenetic regions
+        PLASTOME_EXTRACTION(PGA_V2.out.annotations)
+
     emit:
         plastome_structure_results = PLASTOME_STRUCTURE.out.structured_fastas
         plastome_structure_summary = PLASTOME_STRUCTURE.out.structure_summary
         plastome_structure_coords = PLASTOME_STRUCTURE.out.structure_coord
         plastome_annotations = PGA_V2.out.annotations
         plastome_annotation_log = PGA_V2.out.annotation_log
+        plastome_assessments = PLASTOME_ASSESSMENT.out.assessments
+        plastome_assessment_summary = PLASTOME_ASSESSMENT.out.assessment_summary
 
 }

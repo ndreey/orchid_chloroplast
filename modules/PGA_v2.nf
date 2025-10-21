@@ -12,7 +12,7 @@ process PGA_V2 {
 
     input:
         file fastas
-        file genbanks
+        file references
 
     output:
         // Expect the Perl script to write out a folder named "plastome_structure"
@@ -32,8 +32,8 @@ process PGA_V2 {
         mv "\$f" passed_plastomes/
     done
 
-    # stage input Genbanks
-    for f in ${genbanks}
+    # stage input Genbank References
+    for f in ${references}
     do
         mv "\$f" ref_plastomes/
     done
@@ -42,7 +42,7 @@ process PGA_V2 {
     PLASTIDHUB_PATH="/home/andbou/orchid_chloroplast/scripts/PlastidHub"
 
     # Run the PlastidHub script on staged FASTAs
-    perl "\${PLASTIDHUB_PATH}/1.2.PGA_v2.pl" \\
+    perl \${PLASTIDHUB_PATH}/1.2.PGA_v2.pl \\
         -target passed_plastomes \\
         -reference ref_plastomes \\
         -o plastome_annotation

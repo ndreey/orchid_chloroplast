@@ -19,7 +19,7 @@ process RENAME_PLASTOME {
 
     # Construct base name (no extra sanitization per your note)
     base="\${sample}-\${genus}_\${taxon}-\${type_tag}-plastome"
-    new_name="\${base}.plastome.fasta"
+    new_name="\${base}.fasta"
 
     # Replace headers in the FASTA file
     awk -v name="\${base}" 'BEGIN{n=0} /^>/ { if(n==0) {print ">"name} else {print ">"name"_"n} n++; next } {print}' "${fasta}" > "\${new_name}"
