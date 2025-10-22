@@ -5,7 +5,7 @@ process PLASTOME_STRUCTURE {
     tag 'plastome_structure'
 
     // publish only FASTA files from the plastome_structure/ folder
-    publishDir params.res.plastome_structure, mode: 'symlink', pattern: '*plastome_LSC_IRb_SSC_IRa.fasta'
+    publishDir params.res.plastome_structure, mode: 'symlink', pattern: '*_LSC_IRb_SSC_IRa.fasta'
     // publish the summary TSV to the stats folder
     publishDir 'results/stats', mode: 'copy', pattern: 'plastome-structure_summary.tsv'
     publishDir 'results/stats', mode: 'copy', pattern: 'quadripartite_structure_coordinate.txt'
@@ -17,7 +17,7 @@ process PLASTOME_STRUCTURE {
 
     output:
         // publish individual FASTA files (NOT the whole folder)
-        path '*plastome_LSC_IRb_SSC_IRa.fasta', emit: structured_fastas
+        path '*_LSC_IRb_SSC_IRa.fasta', emit: structured_fastas
         // publish the TSV summary to stats
         path 'plastome-structure_summary.tsv', emit: structure_summary
         path 'quadripartite_structure_coordinate.txt', emit: structure_coord
@@ -37,7 +37,7 @@ process PLASTOME_STRUCTURE {
     done
 
     # Absolute path to the PlastidHub script
-    PLASTIDHUB_PATH="/home/andbou/orchid_chloroplast/scripts/PlastidHub"
+    PLASTIDHUB_PATH="../../../scripts/PlastidHub"
 
     # Run the PlastidHub script on staged FASTAs
     perl \${PLASTIDHUB_PATH}/1.1.quadripartite_standardization_v1.pl \\
@@ -46,9 +46,6 @@ process PLASTOME_STRUCTURE {
         -s N \\
         -l 500 \\
         -o plastome_structure
-
-    # Remove unstructured path_sequence FASTAs, keep the LSC_IRb_SSC_IRa structured FASTAs
-    rm -f plastome_structure/*plastome.fasta || true
 
     # Build a TSV summary of region lengths per fasta using the coordinate file
     # Keep only the Post-adjustment lines and compute lengths from ranges like 1-83153
@@ -76,7 +73,8 @@ process PLASTOME_STRUCTURE {
     fi
 
     # Move contents into working directory.
-    cp plastome_structure/* . || true
+    cp plastome_structure/*LSC_IRb_SSC_IRa.fasta . || true
+    cp plastome_structure/*.txt . || true
 
     rm -r passed_plastomes plastome_structure
     

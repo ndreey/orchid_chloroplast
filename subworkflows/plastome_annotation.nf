@@ -3,11 +3,6 @@
 /*
  * Subworkflow for annotating and processing the plastid genomes
  * Author: André Bourbonnais (ndreey)
- *
- * Behaviour:
- *  - Run RENAME_PLASTOME on every incoming plastome tuple
- *  - Collect renamed plastomes, keep only those with status == 'PASS'
- *  - Collect all passed FASTAs into a single list and pass that to PLASTOME_STRUCTURE
  */
 
 include { RENAME_PLASTOME }             from '../modules/rename_plastome.nf'
@@ -15,6 +10,9 @@ include { PLASTOME_STRUCTURE }          from '../modules/plastome_structure.nf'
 include { PGA_V2 }                      from '../modules/PGA_v2.nf'
 include { PLASTOME_ASSESSMENT }         from '../modules/plastome_assessment.nf'
 include { PLASTOME_EXTRACTION }         from '../modules/plastome_extraction.nf'
+include { SORT_GENOMES }                from '../modules/sort_genomes.nf'
+include { GET_AMPLICONS }               from '../modules/plastome_markers.nf'
+
 
 workflow PLASTOME_ANNOTATION {
     take:
@@ -26,6 +24,9 @@ workflow PLASTOME_ANNOTATION {
 
         // Grab the emitted renamed tuples
         renamed_plastomes = RENAME_PLASTOME.out.renamed_plastomes
+
+        // Publish renamed plastomes into sorted directories based on their type
+        SORT_GENOMES(renamed_plastomes)
 
         // Keep only PASS entries (destructure matches RENAME_PLASTOME output: meta, fasta, type, status)
         pass_renamed = renamed_plastomes
@@ -51,7 +52,14 @@ workflow PLASTOME_ANNOTATION {
         PLASTOME_ASSESSMENT(ref_plastomes, PGA_V2.out.annotations)
 
         // Extract cds and intergenetic regions
-        PLASTOME_EXTRACTION(PGA_V2.out.annotations)
+        //PLASTOME_EXTRACTION(PGA_V2.out.annotations)
+
+        // Make value channel for the marker pairs tsv file
+        marker_pairs_ch = Channel.fromPath(params.marker_pairs, checkIfExists: true)
+
+        // Run the marker extraction on the passes plastome assemblies
+        GET_AMPLICONS(pass_fastas, marker_pairs_ch)
+
 
     emit:
         plastome_structure_results = PLASTOME_STRUCTURE.out.structured_fastas
@@ -61,5 +69,7 @@ workflow PLASTOME_ANNOTATION {
         plastome_annotation_log = PGA_V2.out.annotation_log
         plastome_assessments = PLASTOME_ASSESSMENT.out.assessments
         plastome_assessment_summary = PLASTOME_ASSESSMENT.out.assessment_summary
+        amplicon_fastas = GET_AMPLICONS.out.amplicon_fastas
+        amplicon_summary = GET_AMPLICONS.out.amplicon_summary
 
 }

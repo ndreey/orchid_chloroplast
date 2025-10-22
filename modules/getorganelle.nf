@@ -61,12 +61,6 @@ process GETORGANELLE_RUN {
 
     echo "\$(date) [INFO]   GetOrganelle run for sample: ${meta.sample}"
 
-    # Create directories
-    COMP="../../../${params.res.chloroplasts}/complete"
-    NC="../../../${params.res.chloroplasts}/nearly-complete"
-    SCAFF="../../../${params.res.chloroplasts}/scaffolds"
-    mkdir -p "\$COMP" "\$NC" "\$SCAFF"
-
     # ---------- First pass ----------
     get_organelle_from_reads.py \\
         -1 "${read1}" \\
@@ -93,7 +87,6 @@ process GETORGANELLE_RUN {
         # Complete on first pass -> PASS, keep results as-is
         STATUS="PASS"
         RESULT_TYPE_FINAL="complete"
-        cp "\$GENOME" "\$COMP/"
         echo -e "${meta.sample}\\t\$RESULT_TYPE\\tNA" >> "../../../${params.stats.get_org}"
         echo "\$(date) [INFO]   Classified COMPLETE (PASS) on first pass"
         
@@ -127,11 +120,9 @@ process GETORGANELLE_RUN {
         # No polish output — keep first-pass result
         if [ "\$RESULT_TYPE" = "nearly-complete" ]; then
             STATUS="PASS"
-            cp "\$GENOME" "\$NC/"
         else
             # scaffolds
             STATUS="FAIL"
-            cp "\$GENOME" "\$SCAFF/"
         fi
         RESULT_TYPE_FINAL="\$RESULT_TYPE"
         BEST_ASSEMBLY="\$GENOME"
@@ -165,13 +156,10 @@ process GETORGANELLE_RUN {
             BEST_ASSEMBLY="\$POLISH"
             if [ "\$RESULT_TYPE2" = "complete" ]; then
                 STATUS="PASS"
-                cp "\$POLISH" "\$COMP/"
             elif [ "\$RESULT_TYPE2" = "nearly-complete" ]; then
                 STATUS="PASS"
-                cp "\$POLISH" "\$NC/"
             else
                 STATUS="FAIL"
-                cp "\$POLISH" "\$SCAFF/"
             fi
         else
             # Use first pass results
@@ -179,10 +167,8 @@ process GETORGANELLE_RUN {
             BEST_ASSEMBLY="\$GENOME"
             if [ "\$RESULT_TYPE" = "nearly-complete" ]; then
                 STATUS="PASS"
-                cp "\$GENOME" "\$NC/"
             else
                 STATUS="FAIL"
-                cp "\$GENOME" "\$SCAFF/"
             fi
         fi
         

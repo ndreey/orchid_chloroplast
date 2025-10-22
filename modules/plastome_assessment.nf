@@ -51,7 +51,7 @@ process PLASTOME_ASSESSMENT {
 
     for f in plastome_assessment/*.txt; do
       
-        sampleID=\$(basename "\$f" -plastome.txt | cut -f 4- -d "_")
+        sampleID=\$(basename "\$f" .txt | cut -f 4- -d "_")
         # Number of genes in target
         nHit=\$(grep '(nH)' "\$f" | tr -d "|" | cut -f 1 -d " " || true)
         pHit=\$(grep '(pH)' "\$f" | tr -d "|" | cut -f 1 -d " " || true)

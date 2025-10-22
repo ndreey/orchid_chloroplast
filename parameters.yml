@@ -12,12 +12,15 @@ res:
   trim: "results/01-trimmed"
   get_org: "results/02-get_organelle"
   getorg_polish: "results/03-get_org_polish"
-  chloroplasts: "results/chloroplast_genomes"
+  genomes:
+    complete: "results/chloroplast_genomes/complete"
+    nearly_complete: "results/chloroplast_genomes/nearly-complete"
+    scaffolds: "results/chloroplast_genomes/scaffolds"
   plastome_structure: "results/04-plastome-structure"
   plastome_annotation: "results/05-plastome-annotation"
   plastome_assessment: "results/06-plastome-assesment"
-  plastome_extraction: "results/07-plastome-extraction"
-
+  amplicons:  "results/07-marker_pairs-amplicons"
+  plastome_extraction: "results/XX-plastome-extraction"
 
 # Statistics
 stats:
@@ -25,6 +28,7 @@ stats:
 
 # Init params
 metadata: "doc/mini_test.csv"
+marker_pairs: "doc/marker-pairs.tsv"
 
 # Reference genomes
 references:
