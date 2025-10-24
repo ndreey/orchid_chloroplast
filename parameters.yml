@@ -29,7 +29,7 @@ stats:
   get_org: "results/stats/get_organelle_results.tsv"
 
 # Init params
-metadata: "doc/chloro__metadata.csv"
+metadata: "doc/chloro_metadata.csv"
 marker_pairs: "doc/marker-pairs.tsv"
 
 # Reference genomes
