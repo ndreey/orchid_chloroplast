@@ -70,6 +70,6 @@ workflow PLASTOME_ANNOTATION {
         plastome_assessments = PLASTOME_ASSESSMENT.out.assessments
         plastome_assessment_summary = PLASTOME_ASSESSMENT.out.assessment_summary
         amplicon_fastas = GET_AMPLICONS.out.amplicon_fastas
-        amplicon_summary = GET_AMPLICONS.out.amplicon_summary
-
+        amplicon_results = GET_AMPLICONS.out.amplicon_results
+        amplicon_beds = GET_AMPLICONS.out.amplicon_beds
 }

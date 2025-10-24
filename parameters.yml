@@ -19,7 +19,9 @@ res:
   plastome_structure: "results/04-plastome-structure"
   plastome_annotation: "results/05-plastome-annotation"
   plastome_assessment: "results/06-plastome-assesment"
-  amplicons:  "results/07-marker_pairs-amplicons"
+  amplicons:
+    fasta: "results/07-marker_pairs-amplicons/fasta"
+    bed: "results/07-marker_pairs-amplicons/bed"
   plastome_extraction: "results/XX-plastome-extraction"
 
 # Statistics
