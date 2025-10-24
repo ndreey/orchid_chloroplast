@@ -42,7 +42,7 @@ process GET_AMPLICONS {
     cat passed_plastomes/*.fasta > all_passed_plastomes.fasta
 
     # Create headers for amplicon results
-    echo -e "marker\\tsample\\tstart\\tend\\tstrand\\length\\tsequence" > amplicon_results.tsv
+    echo -e "marker\\tsample\\tstart\\tend\\tstrand\\tlength\\tsequence" > amplicon_results.tsv
 
     # Get fasta for each marker pairs across all given plastomes.
     while IFS='\t' read -r ID FW RV; do
