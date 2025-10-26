@@ -1,5 +1,7 @@
 #!/usr/bin/env nextflow
 
+// This module needs a fail safe. PGA_v2.pl sometimes fails without returning a non-zero exit code.
+// We would need to parse the log file for errors and exit an set test attempts in nextflow.
 process PGA_V2 {
     label 'plastome_annotation'
     tag 'plastome_annotation'
