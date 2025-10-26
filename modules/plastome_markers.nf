@@ -49,10 +49,10 @@ process GET_AMPLICONS {
         echo "Extracting marker: \$ID with primers FW: \$FW and RV: \$RV"
     
         # Extract fasta
-        seqkit amplicon -F "\$FW" -R "\$RV" -m 2 -o amplicons/"\${ID}.amplicon.fasta" all_passed_plastomes.fasta
+        seqkit amplicon -j ${task.cpus} -F "\$FW" -R "\$RV" -m 2 -o amplicons/"\${ID}.amplicon.fasta" all_passed_plastomes.fasta
     
         # Extract as BED to get coordinates
-        seqkit amplicon -F "\$FW" -R "\$RV" -m 2 --bed -o amplicons/"\${ID}.amplicon.bed" all_passed_plastomes.fasta
+        seqkit amplicon -j ${task.cpus} -F "\$FW" -R "\$RV" -m 2 --bed -o amplicons/"\${ID}.amplicon.bed" all_passed_plastomes.fasta
 
         # Create summary of all hits
         cat amplicons/"\${ID}.amplicon.bed" | awk -v id="\$ID" 'BEGIN {OFS="\\t"} {print id, \$1, \$2, \$3, \$6, length(\$7), \$7}' >> amplicon_results.tsv

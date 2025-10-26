@@ -50,7 +50,7 @@ process PGA_V2 {
     # Move contents into working directory.
     cp plastome_annotation/* . || true
 
-    rm -r passed_plastomes plastome_annotation ref_plastomes
+    #rm -r passed_plastomes plastome_annotation ref_plastomes
 
     mv warning.log plastome_annotation_warnings.log || true
 
