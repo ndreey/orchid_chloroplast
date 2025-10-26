@@ -39,7 +39,7 @@ process PGA_V2 {
     done
 
     # Absolute path to the PlastidHub script
-    PLASTIDHUB_PATH="/home/andbou/orchid_chloroplast/scripts/PlastidHub"
+    PLASTIDHUB_PATH="../../../scripts/PlastidHub"
 
     # Run the PlastidHub script on staged FASTAs
     perl \${PLASTIDHUB_PATH}/1.2.PGA_v2.pl \\
@@ -50,7 +50,7 @@ process PGA_V2 {
     # Move contents into working directory.
     cp plastome_annotation/* . || true
 
-    rm -r passed_plastomes plastome_annotation ref_plastomes
+    #rm -r passed_plastomes plastome_annotation ref_plastomes
 
     mv warning.log plastome_annotation_warnings.log || true
 
